@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+	<header>
+
+	</header>
+	<main>
+		<div class="game">
+			<div id="container">
+				<canvas id="hangman" width="500" height="300"></canvas>
+			</div>
+		</div>
+
+		<div class="alert-div">
+			<p class="warning">INGRESE SOLO LETRAS MAYUSCULAS! </p>
+		</div>
+
+
+		<div class="correct-letters-div">
+		</div>
+
+		<div class="correct-letters-lines-div">
+			<span class="correct-letter-span"></span>
+		</div>
+
+		<div class="wrong-letter-div">
+			<p class="wrong-letters"></p>
+		</div>
+
+		<div class="letters">
+			<button id="next">Next</button>
+			<button id="reset">Reset</button>
+		</div>
+
+
+	</main>
+
+	<script src="scripts/game.js"> </script>
+	<script src="scripts/validation.js"> </script>
+</body>
+
+</html>

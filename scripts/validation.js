@@ -1,4 +1,4 @@
-function checkLetter(key) {
+function validateLetter(key) {
 	if (specialCharacters(key)) {
 		warning.textContent = "No pueden ingresarse caracteres especiales!";
 		return false;

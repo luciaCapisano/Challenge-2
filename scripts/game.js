@@ -2,19 +2,15 @@ const canvas = document.getElementById('hangman');
 const context = canvas.getContext("2d");
 let warning = document.querySelector('.warning');
 let wrong = document.querySelector('.wrong-letters');
-let correctLettersDiv = document.querySelector('.correct-letters-div');
-let correctLetterLines = document.querySelector('.correct-letters-lines-div');
-let displayLetters = document.querySelector('.letters');
+let correctLetterLinesDiv = document.querySelector('.correct-letters-lines-div');
 let wordList = ["HOLA", "CHAU", "MAÑANA", "SALUDO", "CUMPLEAÑOS"];
 let wrongLetters = [];
-let letrasUsadas = [];
+//let usedLetters = [];
 let correctLetters = [];
 let secretWord = "";
-let secretArray = [];
+//let secretArray = [];
 let errorsLeft = 6;
-let errores = 0;
-var step = 0;
-
+let step = 0;
 
 clearCanvas = () => {
 	context.clearRect(0, 0, canvas.width, canvas.height)
@@ -94,90 +90,20 @@ function drawNext() {
 	if (undefined === draws[step]) this.disabled = true;
 };
 
-
-function drawLinesCanvas(lines) {
-	x = 50;
-	i = 0;
-	while (i < lines) {
-		context.strokeStyle = '#444';
-		context.lineWidth = 5;
-		let space = i * 10;
-		context.beginPath();
-		context.moveTo(x, 350);
-		context.lineTo((x + 50), 350);
-		context.stroke();
-		x += 70;
-		i++;
-	}
-}
-
-function drawLinesSpan(lines) {
-	i = 1;
-	while (i < lines) {
-		let spanLetter = document.createElement("span");
-		correctLetterLines.appendChild(spanLetter).classList.add('correct-letter-span');
-		i++;
-	}
-}
-
-function drawLineDivs(){
+function drawLineDivs() {
 	i = 0;
 	while (i < secretWord.length) {
-		let divLetter = document.createElement("div");
-		divLetter.classList.add('correct-letter-div'); 
-		correctLetterLines.appendChild(divLetter);
-
 		let spanLetter = document.createElement("span");
-		correctLetterLines.appendChild(spanLetter).classList.add('correct-letter-span');
-
+		spanLetter.classList.add('correct-letter-span');
+		correctLetterLinesDiv.appendChild(spanLetter);
+		let spanLine = document.createElement("span");
+		spanLine.classList.add('correct-line-span');
+		correctLetterLinesDiv.appendChild(spanLine);
 		i++;
 	}
 }
 
-function displayCorrectLetters() {
-	correctLetters.forEach((letter) => {
-		let li = document.createElement("li");
-		li.textContent = letter;
-		displayLetters.appendChild(li);
-	})
-}
-
-function agregarLetra(letter){
-    let i = secretWord.indexOf(letter);
-
-
-
-	alert(i);
-    const guiones = document.querySelectorAll(".correct-letter-div");
-    if(i != -1){
-        letrasUsadas.push(letter);
-		alert("i = " + i);
-
-
-        while(i != -1){
-            guiones[i].innerHTML = letter;
-            errorsLeft --;
-            aux = i + 1;
-            i =  secretWord.indexOf(letter, aux);
-        }
-        if(errorsLeft == 0){
-            gameOver();
-        }
-
-    }else{
-        wrongLetters.push(letter);
-		wrong.textContent = wrongLetters;
-			drawNext();
-        errores++;
-      
-    }
-    if(errorsLeft == 0){
-        gameOver();
-    }
-}
-
-
-function gameOver(){
+function gameOver() {
 	alert("Se termino el juego");
 }
 
@@ -199,13 +125,23 @@ function pickWord() {
 	return wordList[position];
 }
 
-
-
 function checkCorrectLetter(letter) {
-	if (secretWord.includes(letter)) {
-		correctLetters.push(letter, secretWord.indexOf(letter));
-		displayLetters.textContent = "";
-		displayCorrectLetters();
+	let i = secretWord.indexOf(letter);
+
+	const lines = document.querySelectorAll(".correct-letter-span");
+	if (i != -1) {
+		correctLetters.push(letter);
+
+		while (i != -1) {
+			lines[i].innerHTML = letter;
+			errorsLeft--;
+			aux = i + 1;
+			i = secretWord.indexOf(letter, aux);
+		}
+		if (errorsLeft == 0) {
+			gameOver();
+		}
+
 	} else {
 		if (!wrongLetters.includes(letter)) {
 			wrongLetters.push(letter);
@@ -213,24 +149,14 @@ function checkCorrectLetter(letter) {
 			drawNext();
 		}
 	}
-}
 
+	if (errorsLeft == 0) {
+		gameOver();
+	}
 
-function checkPositionLetter(letter) {
-
-	//secretWord.indexOf(letter);
-
-	console.log(secretWord.indexOf(letter));
-
-}
-
-function addWrongLetters(letter) {
-
-
-}
-
-function addWord() {
-	wordList.push();
+	if(wrongLetters.length == 6){
+		gameOver();
+	}
 }
 
 
@@ -238,26 +164,22 @@ function startNewGame() {
 	draw("gallows");
 	secretWord = pickWord();
 	wrongLetters = [];
-	secretArray = Array.from(secretWord);
-	correctLettersDiv.innerHTML = "";
-	correctLetterLines.innerHTML = "";
+	//secretArray = Array.from(secretWord);
+	correctLetterLinesDiv.innerHTML = "";
 	wrongLetters.innerHTML = "";
 	drawLineDivs();
 }
 
-startNewGame();
-
 document.addEventListener('keypress', (event) => {
 	let letter = event.key;
-	if (checkLetter(letter)) {
-		agregarLetra(letter);
-
-		//checkCorrectLetter(letter);
+	if (validateLetter(letter)) {
+		checkCorrectLetter(letter);
 	};
 
 });
 
 
-
 const next = document.getElementById('next').addEventListener('click', drawNext);
 document.getElementById('reset').addEventListener('click', reset);
+
+startNewGame();

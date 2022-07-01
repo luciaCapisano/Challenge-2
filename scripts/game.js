@@ -2,13 +2,12 @@ const canvas = document.getElementById('hangman');
 const context = canvas.getContext("2d");
 let warning = document.querySelector('.warning');
 let wrong = document.querySelector('.wrong-letters');
+let wordAdd = document.querySelector('.word-add');
 let correctLetterLinesDiv = document.querySelector('.correct-letters-lines-div');
 let wordList = ["HOLA", "CHAU", "MAÑANA", "SALUDO", "CUMPLEAÑOS"];
 let wrongLetters = [];
-//let usedLetters = [];
 let correctLetters = [];
 let secretWord = "";
-//let secretArray = [];
 let errorsLeft = 6;
 let step = 0;
 
@@ -107,6 +106,10 @@ function gameOver() {
 	alert("Se termino el juego");
 }
 
+function wonGame() {
+	alert("Ganaste el juego!");
+}
+
 function reset() {
 	clearCanvas();
 	step = 0;
@@ -134,7 +137,7 @@ function checkCorrectLetter(letter) {
 
 		while (i != -1) {
 			lines[i].innerHTML = letter;
-			errorsLeft--;
+			
 			aux = i + 1;
 			i = secretWord.indexOf(letter, aux);
 		}
@@ -146,6 +149,7 @@ function checkCorrectLetter(letter) {
 		if (!wrongLetters.includes(letter)) {
 			wrongLetters.push(letter);
 			wrong.textContent = wrongLetters;
+			errorsLeft--;
 			drawNext();
 		}
 	}
@@ -157,14 +161,19 @@ function checkCorrectLetter(letter) {
 	if(wrongLetters.length == 6){
 		gameOver();
 	}
-}
 
+	if(correctLetters.length == secretWord.length){
+		wonGame();
+	}
+}
 
 function startNewGame() {
 	draw("gallows");
 	secretWord = pickWord();
+	errorsLeft = 6;
 	wrongLetters = [];
-	//secretArray = Array.from(secretWord);
+	correctLetters = [];
+	wrong.innerHTML = "";
 	correctLetterLinesDiv.innerHTML = "";
 	wrongLetters.innerHTML = "";
 	drawLineDivs();
@@ -178,6 +187,15 @@ document.addEventListener('keypress', (event) => {
 
 });
 
+function addWord(){
+let palabra = wordAdd.value;
+wordList.add(palabra);
+
+wordList.forEach(palabra => {
+	console.log(palabra)
+});
+
+}
 
 const next = document.getElementById('next').addEventListener('click', drawNext);
 document.getElementById('reset').addEventListener('click', reset);
